@@ -1,30 +1,20 @@
 import { useState } from 'react'
-import Fab from '@mui/material/Fab'
-import AddIcon from '@mui/icons-material/Add'
+import CssBaseline from '@mui/material/CssBaseline'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Fab color="primary" aria-label="add">
-        <AddIcon />
-      </Fab>
-      <div className="text-3xl font-bold underline">
-        This is a div with Tailwind CSS styles applied.
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <CssBaseline />
+      <Container maxWidth="xl">
+        <Box sx={{ bgcolor: '#cfe8fc' }}>
+          <button onClick={() => setCount(count + 1)}>Click me</button>
+          <p>You clicked {count} times</p>
+        </Box>
+      </Container>
     </>
   )
 }
