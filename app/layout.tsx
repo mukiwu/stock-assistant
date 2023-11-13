@@ -1,5 +1,7 @@
 import React from "react"
 import type { Metadata } from 'next'
+import ThemeRegistry from './global.theme.registry'
+
 import Navigation from './ui/Navigation'
 
 import './globals.css'
@@ -21,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navigation />
-        {children}
+        <ThemeRegistry options={{ key: 'mui' }}>
+          <Navigation />
+          {children}
+        </ThemeRegistry>
       </body>
     </html>
   )
