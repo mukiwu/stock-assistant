@@ -4,19 +4,17 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#e3695c',
-      dark: '#292e2f'
+    },
+    secondary: {
+      main: '#a7a9aa',
+      light: '#fafbfb',
+      dark: '#555d5a'
+    },
+    info: {
+      main: '#292e2f'
     },
     success: {
       main: '#549594'
-    },
-    error: {
-      main: '#a7a9aa'
-    },
-    warning: {
-      main: '#fafbfb'
-    },
-    info: {
-      main: '#555d5a'
     }
   }
 })
