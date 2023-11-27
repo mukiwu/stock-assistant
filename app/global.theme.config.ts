@@ -3,15 +3,15 @@ import { createTheme } from '@mui/material/styles'
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#e3695c',
+      main: '#E3695C',
     },
     secondary: {
-      main: '#a7a9aa',
-      light: '#fafbfb',
-      dark: '#555d5a'
+      main: '#A7A9AA',
+      light: '#FAFBFB',
+      dark: '#555D5A'
     },
     info: {
-      main: '#292e2f'
+      main: '#292E2F'
     },
     success: {
       main: '#549594'

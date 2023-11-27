@@ -1,8 +1,10 @@
 import React from "react"
 import type { Metadata } from 'next'
 import ThemeRegistry from './global.theme.registry'
+import Container from '@mui/material/Container'
 
-import Navigation from './ui/Navigation'
+import Navigation from './component/Navigation'
+import TSE from './component/TSE'
 
 import './globals.css'
 import '@fontsource/roboto/300.css'
@@ -24,8 +26,13 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeRegistry options={{ key: 'mui' }}>
-          <Navigation />
-          {children}
+          <Container maxWidth="xl">
+            <Navigation />
+          </Container>
+          <TSE />
+          <Container maxWidth="xl">
+            {children}
+          </Container>
         </ThemeRegistry>
       </body>
     </html>
