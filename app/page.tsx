@@ -79,6 +79,7 @@ const Page = () => {
       fetchQuote(ticker)
       setLastUpdated(new Date())
     }
+
   }, [hydrated, ticker])
 
   if (!hydrated) return null
@@ -94,7 +95,7 @@ const Page = () => {
           >
             重新整理
           </button>
-          <div className="ml-2">最後更新時間：{dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')}</div>
+          <div className="ml-2">最後更新時間：{dayjs(lastUpdated).format('YYYY-MM-DD HH:mm:ss')}</div>
         </div>
       </div>
       <TableContainer>
