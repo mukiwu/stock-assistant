@@ -4,7 +4,6 @@ import ThemeRegistry from './global.theme.registry'
 import Container from '@mui/material/Container'
 
 import Navigation from './component/Navigation'
-import TSE from './component/TSE'
 
 import './globals.css'
 import '@fontsource/roboto/300.css'
@@ -29,10 +28,7 @@ export default function RootLayout({
           <Container maxWidth="xl">
             <Navigation />
           </Container>
-          <TSE />
-          <Container maxWidth="xl">
-            {children}
-          </Container>
+          {children}
         </ThemeRegistry>
       </body>
     </html>

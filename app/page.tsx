@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import dayjs from 'dayjs'
 
+import TSE from './component/TSE'
+
+import Container from '@mui/material/Container'
 import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -104,49 +107,52 @@ const Page = () => {
 
   return (
     <>
-      <div className="my-4 flex justify-between">
-        <h1 className="text-lg">台股即時報價</h1>
-        <div className="flex items-center text-sm">
-          <button
-            className="px-2 py-1 bg-blue-500 text-white rounded-md"
-            onClick={() => fetchTickers()}
-          >
-            重新整理
-          </button>
-          <div className="ml-2">最後更新時間：{dayjs(lastUpdated).format('YYYY-MM-DD HH:mm:ss')}</div>
+      <TSE />
+      <Container maxWidth="xl">
+        <div className="my-4 flex justify-between">
+          <h1 className="text-lg">台股即時報價</h1>
+          <div className="flex items-center text-sm">
+            <button
+              className="px-2 py-1 bg-blue-500 text-white rounded-md"
+              onClick={() => fetchTickers()}
+            >
+              重新整理
+            </button>
+            <div className="ml-2">最後更新時間：{dayjs(lastUpdated).format('YYYY-MM-DD HH:mm:ss')}</div>
+          </div>
         </div>
-      </div>
-      <TableContainer>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a quote table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>股票代碼</StyledTableCell>
-              <StyledTableCell>股票名稱</StyledTableCell>
-              <StyledTableCell align="right">當前價</StyledTableCell>
-              <StyledTableCell align="right">昨日收盤價</StyledTableCell>
-              <StyledTableCell align="right">開盤價</StyledTableCell>
-              <StyledTableCell align="right">最高價</StyledTableCell>
-              <StyledTableCell align="right">最低價</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {quote.map((row: any) => (
-              <TableRow
-                key={row.symbol}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">{row.symbol}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell align="right">{row.closePrice}</TableCell>
-                <TableCell align="right">{row.previousClose}</TableCell>
-                <TableCell align="right">{row.openPrice}</TableCell>
-                <TableCell align="right">{row.highPrice}</TableCell>
-                <TableCell align="right">{row.lowPrice}</TableCell>
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a quote table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>股票代碼</StyledTableCell>
+                <StyledTableCell>股票名稱</StyledTableCell>
+                <StyledTableCell align="right">當前價</StyledTableCell>
+                <StyledTableCell align="right">昨日收盤價</StyledTableCell>
+                <StyledTableCell align="right">開盤價</StyledTableCell>
+                <StyledTableCell align="right">最高價</StyledTableCell>
+                <StyledTableCell align="right">最低價</StyledTableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {quote.map((row: any) => (
+                <TableRow
+                  key={row.symbol}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">{row.symbol}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell align="right">{row.closePrice}</TableCell>
+                  <TableCell align="right">{row.previousClose}</TableCell>
+                  <TableCell align="right">{row.openPrice}</TableCell>
+                  <TableCell align="right">{row.highPrice}</TableCell>
+                  <TableCell align="right">{row.lowPrice}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     </>
   )
 }

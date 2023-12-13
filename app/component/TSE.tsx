@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState, useTransition } from 'react'
-import { fetchTSEIndex } from './TSEApi'
+import { fetchTSEIndex } from '../api/TSE.action'
 import { createChart } from 'lightweight-charts'
 
 const TSE = () => {
