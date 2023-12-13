@@ -24,6 +24,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const apiKey = 'MWQzMGE0NzAtMGY0OS00MWJkLTkzZDAtNGEzNWQzNmNiYWUwIDQ3ODFlMjg2LWU5ZDUtNDM1OC1iZTQxLTU0ZDc4YjcyYWQ1YQ=='
 const apiIntradayTickersUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/intraday/tickers'
 const apiIntradayQuoteUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/intraday/quote'
+const apiSnapshotQuotesUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/snapshot/quotes'
 
 const Page = () => {
   const [hydrated, setHydrated] = useState(false)
@@ -42,6 +43,24 @@ const Page = () => {
       const response = await axios.get(apiIntradayTickersUrl, {
         headers: headers,
         params: payload,
+      })
+      if (response.data.data.length === 0) {
+        await fetchSnapshot()
+      } else {
+        setTicker(response.data.data)
+      }
+    } catch (error) {
+      console.error('API 請求錯誤:', error)
+    }
+  }
+
+  const fetchSnapshot = async () => {
+    try {
+      const headers = {
+        'X-API-KEY': apiKey,
+      }
+      const response = await axios.get(`${apiSnapshotQuotesUrl}/TSE`, {
+        headers: headers
       })
       setTicker(response.data.data)
     } catch (error) {
