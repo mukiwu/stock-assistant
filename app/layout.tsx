@@ -2,7 +2,6 @@ import React from "react"
 import type { Metadata } from 'next'
 import ThemeRegistry from './global.theme.registry'
 import Container from '@mui/material/Container'
-
 import Navigation from './component/Navigation'
 
 import './globals.css'
