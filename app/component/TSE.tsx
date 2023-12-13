@@ -10,8 +10,7 @@ const TSE = () => {
   useEffect(() => {
     startTransition(async () => {
       const response = await fetchTSEIndex()
-      console.log('data', response.data)
-      setTSEIndex(response.data)
+      setTSEIndex(response)
     })
   }, [])
 
