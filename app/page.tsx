@@ -21,7 +21,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }))
 
-const apiKey = 'MWQzMGE0NzAtMGY0OS00MWJkLTkzZDAtNGEzNWQzNmNiYWUwIDQ3ODFlMjg2LWU5ZDUtNDM1OC1iZTQxLTU0ZDc4YjcyYWQ1YQ=='
 const apiIntradayTickersUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/intraday/tickers'
 const apiIntradayQuoteUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/intraday/quote'
 const apiSnapshotQuotesUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/snapshot/quotes'
@@ -35,7 +34,7 @@ const Page = () => {
   const fetchTickers = async () => {
     try {
       const headers = {
-        'X-API-KEY': apiKey,
+        'X-API-KEY': process.env.API_KEY as string
       }
       const payload = {
         type: 'EQUITY'

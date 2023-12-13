@@ -1,7 +1,7 @@
 'use server'
 
-const apiKey = 'MWQzMGE0NzAtMGY0OS00MWJkLTkzZDAtNGEzNWQzNmNiYWUwIDQ3ODFlMjg2LWU5ZDUtNDM1OC1iZTQxLTU0ZDc4YjcyYWQ1YQ=='
 const apiTSEIndexUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/historical/candles/IX0001'
+// https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=20211001&type=IX0001
 
 const formatDate = (date: Date) => {
   const year = date.getFullYear()
@@ -26,7 +26,7 @@ export async function fetchTSEIndex() {
   const response = await fetch(`${apiTSEIndexUrl}?${new URLSearchParams(payload)}`, {
     method: 'GET',
     headers: {
-      'X-API-KEY': apiKey,
+      'X-API-KEY': process.env.API_KEY as string,
       'Content-Type': 'application/json',
     },
   })
