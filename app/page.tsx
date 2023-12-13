@@ -56,7 +56,7 @@ const Page = () => {
   const fetchSnapshot = async () => {
     try {
       const headers = {
-        'X-API-KEY': apiKey,
+        'X-API-KEY': process.env.API_KEY as string
       }
       const response = await axios.get(`${apiSnapshotQuotesUrl}/TSE`, {
         headers: headers
@@ -72,7 +72,7 @@ const Page = () => {
     const rawQuoteData: any[] = []
     try {
       const headers = {
-        'X-API-KEY': apiKey,
+        'X-API-KEY': process.env.API_KEY as string
       }
       for (let i = 0; i < 10 && i < data.length; i++) {
         const item = data[i]
