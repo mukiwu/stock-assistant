@@ -1,5 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
+import { fetchTSEIndex } from './TSEApi'
 import axios from 'axios'
 import { createChart } from 'lightweight-charts'
 
@@ -16,35 +17,15 @@ const formatDate = (date: Date) => {
 }
 
 const TSE = () => {
+  const [isPending, startTransition] = useTransition()
   const [tseIndex, setTSEIndex] = useState<any>([])
 
-  const fetchTSEIndex = async () => {
-    const today = new Date()
-    const lastYear = new Date()
-    lastYear.setFullYear(lastYear.getFullYear() - 1)
-    lastYear.setDate(lastYear.getDate() + 1)
-
-    try {
-      const headers = {
-        'X-API-KEY': apiKey,
-      }
-      const payload = {
-        from: formatDate(lastYear),
-        to: formatDate(today),
-        fields: 'open,high,low,close,volume'
-      }
-      const response = await axios.get(apiTSEIndexUrl, {
-        headers: headers,
-        params: payload,
-      })
-      setTSEIndex(response.data.data)
-    } catch (error) {
-      console.error('API 請求錯誤:', error)
-    }
-  }
-
   useEffect(() => {
-    fetchTSEIndex()
+    startTransition(async () => {
+      const response = await fetchTSEIndex()
+      console.log('data', response.data)
+      setTSEIndex(response.data)
+    })
   }, [])
 
   useEffect(() => {
