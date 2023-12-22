@@ -113,7 +113,7 @@ const Page = () => {
           <h1 className="text-lg">台股即時報價</h1>
           <div className="flex items-center text-sm">
             <button
-              className="px-2 py-1 bg-blue-500 text-white rounded-md"
+              className="px-2 py-1 bg-blue-500 text-white text-xs rounded-md transition-colors hover:bg-blue-400"
               onClick={() => fetchTickers()}
             >
               重新整理

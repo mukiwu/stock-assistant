@@ -7,7 +7,6 @@ const formatDate = (date: Date) => {
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
   const day = date.getDate().toString().padStart(2, '0')
-
   return `${year}-${month}-${day}`
 }
 
@@ -30,12 +29,13 @@ export async function fetchTSEIndex() {
     const response = await fetch(`${apiTSEIndexUrl}?${payload}`, {
       headers: headers,
     })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
     const data = await response.json()
-    return data.data
-  } catch (error) {
+    if (!response.ok) { throw data }
+    return { data }
+  } catch (error: any) {
     console.error('API 請求錯誤:', error)
+    throw new Error(JSON.stringify({
+      data: error
+    }))
   }
 }
