@@ -1,5 +1,4 @@
 'use server'
-import axios from 'axios'
 
 const apiTSEIndexUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/historical/candles/IX0001'
 // https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=20211001&type=IX0001
@@ -23,16 +22,19 @@ export async function fetchTSEIndex() {
       'X-API-KEY': process.env.API_KEY as string,
       'Content-Type': 'application/json'
     }
-    const payload = {
+    const payload = new URLSearchParams({
       from: formatDate(lastYear),
       to: formatDate(today),
       fields: 'open,high,low,close,volume'
-    }
-    const response = await axios.get(apiTSEIndexUrl, {
-      headers: headers,
-      params: payload,
     })
-    return response.data.data
+    const response = await fetch(`${apiTSEIndexUrl}?${payload}`, {
+      headers: headers,
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json()
+    return data.data
   } catch (error) {
     console.error('API 請求錯誤:', error)
   }
