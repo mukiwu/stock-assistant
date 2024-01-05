@@ -27,6 +27,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }))
 
+const CustomizedPagination = styled(MuiPagination)`
+  & .MuiPagination-ul {
+    flex-wrap: nowrap;
+  }
+`
+
 const columns: GridColDef[] = [
   { field: 'symbol', headerName: '股票代碼', width: 100 },
   { field: 'name', headerName: '股票名稱', width: 150 },
@@ -69,7 +75,7 @@ const Page = () => {
     const apiRef = useGridApiContext()
     const pageCount = useGridSelector(apiRef, gridPageCountSelector)
     return (
-      <MuiPagination color="primary" count={pageCount} page={page + 1}
+      <CustomizedPagination color="primary" shape="rounded" size="small" count={pageCount} page={page + 1}
         onChange={(event, newPage) => {
           onPageChange(event as any, newPage - 1);
         }}
@@ -158,7 +164,7 @@ const Page = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <MuiPagination className="my-6 flex justify-center" count={Math.ceil(quote.length / rowsPerPage)} page={1} variant="outlined" shape="rounded" onChange={handleChangePage} />
+        <CustomizedPagination className="my-6 flex justify-center" count={Math.ceil(quote.length / rowsPerPage)} page={1} variant="outlined" shape="rounded" onChange={handleChangePage} />
       </Container>
     </>
   )
