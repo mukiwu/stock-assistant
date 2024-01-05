@@ -34,6 +34,10 @@ const CustomizedPagination = styled(MuiPagination)`
   }
 `
 
+const getCellClassName = (params: GridCellParams) => {
+  return `${Number(params.value) > 0 ? 'text-primary font-bold' : 'text-success font-bold'}`
+}
+
 const columns: GridColDef[] = [
   { field: 'symbol', headerName: '股票代碼', width: 100 },
   { field: 'name', headerName: '股票名稱', width: 150 },
@@ -43,9 +47,7 @@ const columns: GridColDef[] = [
   { field: 'lowPrice', headerName: '最低價', width: 120, type: 'number' },
   {
     field: 'change', headerName: '今日漲跌', width: 120, type: 'number',
-    cellClassName: (params: GridCellParams) => {
-      return `${Number(params.value) > 0 ? '#EF5350' : '#26A69A'}`
-    },
+    cellClassName: (params: GridCellParams) => getCellClassName(params),
     valueFormatter: (params) => {
       const valueFormatted = Number(params.value).toFixed(2)
       return `${valueFormatted}`
@@ -53,6 +55,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'changePercent', headerName: '漲跌幅', width: 120, headerAlign: 'right', align: 'right',
+    cellClassName: (params: GridCellParams) => getCellClassName(params),
     valueFormatter: (params) => {
       const valueFormatted = Number(params.value).toFixed(2)
       return `${valueFormatted}%`
