@@ -12,7 +12,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { DataGrid, GridToolbar, GridColDef, gridPageCountSelector, GridPagination, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar, GridCellParams, GridColDef, gridPageCountSelector, GridPagination, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
 import LinearProgress from '@mui/material/LinearProgress'
 import { TablePaginationProps } from '@mui/material/TablePagination'
 import MuiPagination from '@mui/material/Pagination'
@@ -41,8 +41,23 @@ const columns: GridColDef[] = [
   { field: 'openPrice', headerName: '開盤價', width: 120, type: 'number' },
   { field: 'highPrice', headerName: '最高價', width: 120, type: 'number' },
   { field: 'lowPrice', headerName: '最低價', width: 120, type: 'number' },
-  { field: 'change', headerName: '今日漲跌', width: 120, type: 'number' },
-  { field: 'changePercent', headerName: '漲跌幅', width: 120, headerAlign: 'right', align: 'right' },
+  {
+    field: 'change', headerName: '今日漲跌', width: 120, type: 'number',
+    cellClassName: (params: GridCellParams) => {
+      return `${Number(params.value) > 0 ? '#EF5350' : '#26A69A'}`
+    },
+    valueFormatter: (params) => {
+      const valueFormatted = Number(params.value).toFixed(2)
+      return `${valueFormatted}`
+    }
+  },
+  {
+    field: 'changePercent', headerName: '漲跌幅', width: 120, headerAlign: 'right', align: 'right',
+    valueFormatter: (params) => {
+      const valueFormatted = Number(params.value).toFixed(2)
+      return `${valueFormatted}%`
+    }
+  },
 ]
 
 const apiSnapshotQuotesUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/snapshot/quotes'
@@ -82,7 +97,7 @@ const Page = () => {
         }}
         sx={{
           '& .MuiPagination-ul': {
-            'flex-wrap': 'nowrap'
+            flexWrap: 'nowrap'
           },
         }}
       />
@@ -137,6 +152,7 @@ const Page = () => {
           initialState={{
             pagination: { paginationModel: { pageSize: 12 } },
           }}
+          pageSizeOptions={[12]}
           sx={{
             '& .MuiDataGrid-columnHeaders': {
               background: theme.palette.info.main,
