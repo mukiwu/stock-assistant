@@ -75,9 +75,14 @@ const Page = () => {
     const apiRef = useGridApiContext()
     const pageCount = useGridSelector(apiRef, gridPageCountSelector)
     return (
-      <CustomizedPagination color="primary" shape="rounded" size="small" count={pageCount} page={page + 1}
+      <MuiPagination color="primary" shape="rounded" size="small" count={pageCount} page={page + 1}
         onChange={(event, newPage) => {
           onPageChange(event as any, newPage - 1);
+        }}
+        sx={{
+          '& .MuiPagination-ul': {
+            'flex-wrap': 'nowrap'
+          },
         }}
       />
     )
