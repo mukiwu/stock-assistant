@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import dayjs from 'dayjs'
 
+import theme from './global.theme.config'
 import Container from '@mui/material/Container'
 import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
@@ -135,6 +136,12 @@ const Page = () => {
           }}
           initialState={{
             pagination: { paginationModel: { pageSize: 12 } },
+          }}
+          sx={{
+            '& .MuiDataGrid-columnHeaders': {
+              background: theme.palette.info.main,
+              color: theme.palette.secondary.main,
+            }
           }}
           loading={quote.length === 0}
         />
