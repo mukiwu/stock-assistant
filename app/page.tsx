@@ -11,7 +11,10 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-
+import { DataGrid, GridToolbar, GridColDef, gridPageCountSelector, GridPagination, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
+import LinearProgress from '@mui/material/LinearProgress'
+import { TablePaginationProps } from '@mui/material/TablePagination'
+import MuiPagination from '@mui/material/Pagination'
 import TSE from './component/TSE'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -24,37 +27,25 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }))
 
-const apiIntradayTickersUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/intraday/tickers'
-const apiIntradayQuoteUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/intraday/quote'
+const columns: GridColDef[] = [
+  { field: 'symbol', headerName: '股票代碼', width: 100 },
+  { field: 'name', headerName: '股票名稱', width: 150 },
+  { field: 'closePrice', headerName: '當前價', width: 120, type: 'number' },
+  { field: 'openPrice', headerName: '開盤價', width: 120, type: 'number' },
+  { field: 'highPrice', headerName: '最高價', width: 120, type: 'number' },
+  { field: 'lowPrice', headerName: '最低價', width: 120, type: 'number' },
+  { field: 'change', headerName: '今日漲跌', width: 120, type: 'number' },
+  { field: 'changePercent', headerName: '漲跌幅', width: 120, headerAlign: 'right', align: 'right' },
+]
+
 const apiSnapshotQuotesUrl = 'https://api.fugle.tw/marketdata/v1.0/stock/snapshot/quotes'
 
 const Page = () => {
   const [hydrated, setHydrated] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<Date>()
-  const [ticker, setTicker] = useState<any>([])
   const [quote, setQuote] = useState<any>([])
-
-  const fetchTickers = async () => {
-    try {
-      const headers = {
-        'X-API-KEY': process.env.API_KEY as string
-      }
-      const payload = {
-        type: 'EQUITY'
-      }
-      const response = await axios.get(apiIntradayTickersUrl, {
-        headers: headers,
-        params: payload,
-      })
-      if (response.data.data.length === 0) {
-        await fetchSnapshot()
-      } else {
-        setTicker(response.data.data)
-      }
-    } catch (error) {
-      console.error('API 請求錯誤:', error)
-    }
-  }
+  const [page, setPage] = useState(1)
+  const rowsPerPage = 15
 
   const fetchSnapshot = async () => {
     try {
@@ -64,44 +55,47 @@ const Page = () => {
       const response = await axios.get(`${apiSnapshotQuotesUrl}/TSE`, {
         headers: headers
       })
-      setTicker(response.data.data)
+      const data = response.data.data
+      data.forEach((item: any) => {
+        item.id = item.symbol
+      })
+      setQuote(data)
     } catch (error) {
       console.error('API 請求錯誤:', error)
     }
   }
 
-  const fetchQuote = async (data: any) => {
-    setQuote([])
-    const rawQuoteData: any[] = []
-    try {
-      const headers = {
-        'X-API-KEY': process.env.API_KEY as string
-      }
-      for (let i = 0; i < 10 && i < data.length; i++) {
-        const item = data[i]
-        const response = await axios.get(`${apiIntradayQuoteUrl}/${item.symbol}`, {
-          headers: headers
-        })
-        rawQuoteData.push(response.data)
-      }
-      setQuote(rawQuoteData)
-    } catch (error) {
-      console.error('API 請求錯誤:', error)
-    }
+  const Pagination = ({ page, onPageChange }: Pick<TablePaginationProps, 'page' | 'onPageChange'>) => {
+    const apiRef = useGridApiContext()
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector)
+    return (
+      <MuiPagination color="primary" count={pageCount} page={page + 1}
+        onChange={(event, newPage) => {
+          onPageChange(event as any, newPage - 1);
+        }}
+      />
+    )
+  }
+
+  const CustomPagination = (props: any) => {
+    return <GridPagination ActionsComponent={Pagination} {...props} />
+  }
+
+  const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
+    setPage(newPage)
   }
 
   useEffect(() => {
-    fetchTickers()
     setHydrated(true)
   }, [])
 
   useEffect(() => {
     if (hydrated) {
-      fetchQuote(ticker)
+      fetchSnapshot()
       setLastUpdated(new Date())
     }
 
-  }, [hydrated, ticker])
+  }, [hydrated])
 
   if (!hydrated) return null
 
@@ -114,13 +108,26 @@ const Page = () => {
           <div className="flex items-center text-sm">
             <button
               className="px-2 py-1 bg-blue-500 text-white text-xs rounded-md transition-colors hover:bg-blue-400"
-              onClick={() => fetchTickers()}
+              onClick={() => fetchSnapshot()}
             >
               重新整理
             </button>
             <div className="ml-2">最後更新時間：{dayjs(lastUpdated).format('YYYY-MM-DD HH:mm:ss')}</div>
           </div>
         </div>
+
+        <DataGrid density='compact' rows={quote} columns={columns}
+          slots={{
+            pagination: CustomPagination,
+            toolbar: GridToolbar,
+            loadingOverlay: LinearProgress
+          }}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 12 } },
+          }}
+          loading={quote.length === 0}
+        />
+
         <TableContainer>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a quote table">
             <TableHead>
@@ -128,30 +135,30 @@ const Page = () => {
                 <StyledTableCell>股票代碼</StyledTableCell>
                 <StyledTableCell>股票名稱</StyledTableCell>
                 <StyledTableCell align="right">當前價</StyledTableCell>
-                <StyledTableCell align="right">昨日收盤價</StyledTableCell>
                 <StyledTableCell align="right">開盤價</StyledTableCell>
                 <StyledTableCell align="right">最高價</StyledTableCell>
                 <StyledTableCell align="right">最低價</StyledTableCell>
+                <StyledTableCell align="right">今日漲跌</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {quote.map((row: any) => (
-                <TableRow
-                  key={row.symbol}
+              {(quote.slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)).map((row: any) => (
+                <TableRow key={row.symbol}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">{row.symbol}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="right">{row.closePrice}</TableCell>
-                  <TableCell align="right">{row.previousClose}</TableCell>
                   <TableCell align="right">{row.openPrice}</TableCell>
                   <TableCell align="right">{row.highPrice}</TableCell>
                   <TableCell align="right">{row.lowPrice}</TableCell>
+                  <TableCell align="right">{row.change}({row.changePercent})</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <MuiPagination className="my-6 flex justify-center" count={Math.ceil(quote.length / rowsPerPage)} page={1} variant="outlined" shape="rounded" onChange={handleChangePage} />
       </Container>
     </>
   )
