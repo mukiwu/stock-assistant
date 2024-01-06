@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 
 import theme from './global.theme.config'
 import Container from '@mui/material/Container'
-import { styled } from '@mui/material/styles'
 import { DataGrid, GridToolbar, GridCellParams, GridColDef, gridPageCountSelector, GridPagination, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
 import LinearProgress from '@mui/material/LinearProgress'
 import { TablePaginationProps } from '@mui/material/TablePagination'
@@ -13,23 +12,23 @@ import MuiPagination from '@mui/material/Pagination'
 import TSE from './component/TSE'
 
 const getCellClassName = (params: GridCellParams) => {
-  return `${Number(params.value) > 0 ? 'text-primary font-bold' : 'text-success font-bold'}`
+  return `${Number(params.value) > 0 ? 'text-primary font-bold' : 'text-success font-bold relative -left-[2px]'}`
 }
 
 const columns: GridColDef[] = [
   { field: 'symbol', headerName: '股票代碼', width: 100 },
   { field: 'name', headerName: '股票名稱', width: 150 },
   {
-    field: 'closePrice', headerName: '當前價', width: 120, type: 'number',
+    field: 'closePrice', headerName: '當前價', width: 120, headerAlign: 'center', align: 'center',
     // cellClassName: (params: GridCellParams) => {
     //   return `${Number(params.value) > 0 ? 'text-primary font-bold' : 'text-success font-bold'}`
     // }
   },
-  { field: 'openPrice', headerName: '開盤價', width: 120, type: 'number' },
-  { field: 'highPrice', headerName: '最高價', width: 120, type: 'number' },
-  { field: 'lowPrice', headerName: '最低價', width: 120, type: 'number' },
+  { field: 'openPrice', headerName: '開盤價', width: 120, headerAlign: 'center', align: 'center', },
+  { field: 'highPrice', headerName: '最高價', width: 120, headerAlign: 'center', align: 'center', },
+  { field: 'lowPrice', headerName: '最低價', width: 120, headerAlign: 'center', align: 'center', },
   {
-    field: 'change', headerName: '今日漲跌', width: 120, type: 'number',
+    field: 'change', headerName: '今日漲跌', width: 120, headerAlign: 'center', align: 'center',
     cellClassName: (params: GridCellParams) => getCellClassName(params),
     valueFormatter: (params) => {
       const valueFormatted = Number(params.value).toFixed(2)
@@ -37,7 +36,7 @@ const columns: GridColDef[] = [
     }
   },
   {
-    field: 'changePercent', headerName: '今日漲跌幅', width: 120, headerAlign: 'right', align: 'right',
+    field: 'changePercent', headerName: '今日漲跌幅', width: 120, headerAlign: 'center', align: 'center',
     cellClassName: (params: GridCellParams) => getCellClassName(params),
     valueFormatter: (params) => {
       const valueFormatted = Number(params.value).toFixed(2)
@@ -151,6 +150,12 @@ const Page = () => {
             '& .MuiDataGrid-columnHeaders': {
               background: theme.palette.info.main,
               color: theme.palette.secondary.main,
+            },
+            '& .MuiIconButton-root': {
+              color: theme.palette.secondary.light,
+            },
+            '& .MuiDataGrid-columnSeparator': {
+              color: 'transparent'
             }
           }}
           loading={quote.length === 0}
